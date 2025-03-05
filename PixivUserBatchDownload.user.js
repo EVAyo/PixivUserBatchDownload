@@ -7,7 +7,7 @@
 // @description:zh-CN	配合Aria2，一键批量下载P站画师的全部作品
 // @description:zh-TW	配合Aria2，一鍵批量下載P站畫師的全部作品
 // @description:zh-HK	配合Aria2，一鍵批量下載P站畫師的全部作品
-// @version		5.21.152
+// @version		5.21.153
 // @author		Mapaler <mapaler@163.com>
 // @copyright	2016~2024+, Mapaler <mapaler@163.com>
 // @namespace	http://www.mapaler.com/
@@ -82,17 +82,17 @@ const mainDivSearchCssSelector = [
 	{selectors: '#spa-contents .user-stats'}, // 手机版用户页
 	{selectors: '#spa-contents .user-details-card'}, // 手机版作品页
 	// PC版 单个作品页
-	{selectors: ':scope aside section:has(button[data-gtm-user-id][data-click-label])',
+	{selectors: ':scope main+aside section)',
 		fallcack: (node) => {
-			const ele = node.querySelector(':scope main+aside>section div[title]');
+			const ele = node.querySelector(':scope main+aside section');
 			return ele?.closest('section');
 		},
 	},
 	//2024年10月11日 目前火狐更新到128后，支持 :has 了，定位全部被导向这一条了，上面一条不起作用了。
 	// PC版 用户资料页
-	{selectors: ':scope :has(>div>h1,>div>button[data-gtm-user-id][data-click-label])',
+	{selectors: ':scope :has(>div>h1):has(>div>div>button>svg)',
 		fallcack: (node) => {
-			const ele = node.querySelector(':scope div[title]:not(a [title])');
+			const ele = node.querySelector(':scope div>h1');
 			return ele?.parentElement?.parentElement?.nextElementSibling;
 		},
 	},
@@ -152,7 +152,7 @@ const limitingPathRegExp = /(\/common\/images\/(limit_(?:mypixiv|unknown)_\d+))\
 const limitingFilenameExp = /limit_(mypixiv|unknown)/ig; //P站上锁图片文件名正则匹配式
 
 //Header使用
-const PixivAppVersion = "6.127.0"; //Pixiv APP的版本
+const PixivAppVersion = "6.135.1"; //Pixiv APP的版本
 const AndroidVersion = "15.0.0"; //安卓的版本
 const UA = `PixivAndroidApp/${PixivAppVersion} (Android ${AndroidVersion}; Android SDK built for x64)`; //向P站请求数据时的UA
 
@@ -2354,7 +2354,7 @@ function buildDlgRefreshToken() {
 	logo_box.className = "logo-box";
 	const logo = logo_box.appendChild(document.createElement("img"));
 	logo.className = "pixiv-logo";
-	logo.src = "https://s.pximg.net/accounts/assets/6bea8becc71d27cd20649ffbc047e456.svg";
+	logo.src = "https://s.pximg.net/accounts/assets/5b5fffd69bf4da523daf79a9ce32c9ac.svg";
 	logo.alt = "pixiv logo";
 
 	const progress = dlg.tokenExpires = dlg.content.appendChild(buildProgressToken());
