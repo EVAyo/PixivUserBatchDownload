@@ -7,9 +7,10 @@
 // @description:zh-CN	配合Aria2，一键批量下载P站画师的全部作品
 // @description:zh-TW	配合Aria2，一鍵批量下載P站畫師的全部作品
 // @description:zh-HK	配合Aria2，一鍵批量下載P站畫師的全部作品
-// @version		5.21.153
+// @version		5.22.154
 // @author		Mapaler <mapaler@163.com>
 // @copyright	2016~2024+, Mapaler <mapaler@163.com>
+// @license		GNU General Public License v3.0 or later
 // @namespace	http://www.mapaler.com/
 // @icon		https://www.pixiv.net/favicon.ico
 // @homepage	https://github.com/Mapaler/PixivUserBatchDownload
@@ -152,7 +153,7 @@ const limitingPathRegExp = /(\/common\/images\/(limit_(?:mypixiv|unknown)_\d+))\
 const limitingFilenameExp = /limit_(mypixiv|unknown)/ig; //P站上锁图片文件名正则匹配式
 
 //Header使用
-const PixivAppVersion = "6.135.1"; //Pixiv APP的版本
+const PixivAppVersion = "6.146.0"; //Pixiv APP的版本
 const AndroidVersion = "15.0.0"; //安卓的版本
 const UA = `PixivAndroidApp/${PixivAppVersion} (Android ${AndroidVersion}; Android SDK built for x64)`; //向P站请求数据时的UA
 
@@ -449,7 +450,7 @@ class oAuth2
 		//OAuth 2.0 客户端应用生成一个43~128位的随机字符串 （code_verifier）并查找它的 SHA256 哈希，这称为 code_challenge。
 		const codeLen = Math.randomInteger(43, 128); //产生43~128位
 		const passArray = new Uint8Array(codeLen);
-		window.crypto.getRandomValues(passArray); //获取符合密码学要求的安全的随机值
+		globalThis.crypto.getRandomValues(passArray); //获取符合密码学要求的安全的随机值
 	
 		const unreservedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
 		const charsLength = unreservedChars.length - 1;
@@ -823,7 +824,7 @@ var Dialog = function(caption, classname, id) {
 					if (dlgs[dlgi] != this)
 					{
 						dlgs[dlgi].classList.remove("pubd-dlg-active"); //取消激活
-						dlgs[dlgi].style.zIndex = parseInt(window.getComputedStyle(dlgs[dlgi], null).getPropertyValue("z-index")) - 1; //从当前网页最终样式获取该窗体z级，并-1.
+						dlgs[dlgi].style.zIndex = parseInt(globalThis.getComputedStyle(dlgs[dlgi], null).getPropertyValue("z-index")) - 1; //从当前网页最终样式获取该窗体z级，并-1.
 					}
 				}
 				this.classList.add("pubd-dlg-active"); //添加激活
@@ -1242,7 +1243,7 @@ function xhrGenneral(url, onload_suceess_Cb, onload_hasError_Cb, onload_notJson_
 							//自动重新登录
 							pubd.dialog.refresh_token.show(
 								(document.body.clientWidth - 370)/2,
-								window.scrollY+300,
+								globalThis.scrollY+300,
 								{
 									onload: ()=>{
 										pubd.dialog.refresh_token.hide();
@@ -1513,7 +1514,7 @@ function buildbtnMenu() {
 	menu.downillust = menu.add("下载当前作品", "pubd-menu-this-illust", function(e) {
 		pubd.dialog.downillust.show(
 			(document.body.clientWidth - 500)/2,
-			window.scrollY+150,
+			globalThis.scrollY+150,
 			{id:getQueryString('illust_id',
 			pubd.touch ? 
 			mainDiv.querySelector('.illust-details-content .work-stats>a') : //手机版
@@ -1525,7 +1526,7 @@ function buildbtnMenu() {
 	menu.downthis = menu.add("下载该画师所有作品", "pubd-menu-this-user", function(e) {
 		pubd.dialog.downthis.show(
 			(document.body.clientWidth - 440)/2,
-			window.scrollY+100,
+			globalThis.scrollY+100,
 			{id:getCurrentUserId()}
 		);
 		menu.hide();
@@ -1543,14 +1544,14 @@ function buildbtnMenu() {
 	if (mdev) menu.downmult = menu.add("多画师下载", "pubd-menu-multiple", function(e) {
 		pubd.dialog.multiple.show(
 			(document.body.clientWidth - 440)/2,
-			window.scrollY+100
+			globalThis.scrollY+100
 		);
 		menu.hide();
 	});
 	menu.add("选项", "pubd-menu-setting", function(e) {
 		pubd.dialog.config.show(
 			(document.body.clientWidth - 400)/2,
-			window.scrollY+50
+			globalThis.scrollY+50
 		);
 		menu.hide();
 	});
@@ -1648,7 +1649,7 @@ function buildDlgConfig() {
 			//登录
 			pubd.dialog.login.show(
 				(document.body.clientWidth - 370)/2,
-				window.scrollY+200
+				globalThis.scrollY+200
 			);
 		}
 	}
@@ -1665,7 +1666,7 @@ function buildDlgConfig() {
 		//刷新许可
 		pubd.dialog.refresh_token.show(
 			(document.body.clientWidth - 370)/2,
-			window.scrollY+300
+			globalThis.scrollY+300
 		);
 	};
 
@@ -2330,7 +2331,7 @@ function buildDlgLogin() {
 		//刷新许可
 		pubd.dialog.refresh_token.show(
 			(document.body.clientWidth - 370)/2,
-			window.scrollY+300
+			globalThis.scrollY+300
 		);
 	};
 
@@ -3979,13 +3980,13 @@ function Main(touch) {
 	GM_registerMenuCommand("PUBD-选项", function(){
 		pubd.dialog.config.show(
 			(document.body.clientWidth - 400)/2,
-			window.scrollY+50
+			globalThis.scrollY+50
 		);
 	});
 	GM_registerMenuCommand("PUBD-下载该画师", function(){
 		pubd.dialog.downthis.show(
 			(document.body.clientWidth - 440)/2,
-			window.scrollY+100,
+			globalThis.scrollY+100,
 			{id:getCurrentUserId()}
 		);
 	});
@@ -3994,7 +3995,7 @@ function Main(touch) {
 	GM_registerMenuCommand("PUBD-导入窗口测试", function(){
 		pubd.dialog.importdata.show(
 			(document.body.clientWidth - 370)/2,
-			window.scrollY+200,
+			globalThis.scrollY+200,
 			{callback:function(txt){
 				const importArr = txt.split("\n");
 				const needAddArr = importArr.map(str=>{
@@ -4024,6 +4025,11 @@ function Main(touch) {
 		);
 	});
 
+	let reInsertStartFunc;
+	GM_registerMenuCommand("PUBD-重新寻找开始按钮", function(){
+		reInsertStartFunc();
+	});
+
 
 	//建立开始按钮
 	const btnStartBox = document.createElement("div");
@@ -4045,7 +4051,7 @@ function Main(touch) {
 				downIllustMenuId = GM_registerMenuCommand("PUBD-下载该作品", function(){
 					pubd.dialog.downillust.show(
 						(document.body.clientWidth - 500)/2,
-						window.scrollY+150,
+						globalThis.scrollY+150,
 						{id:getQueryString('illust_id',
 							pubd.touch ? 
 							mainDiv.querySelector('.illust-details-content .work-stats>a') : //手机版
@@ -4061,7 +4067,7 @@ function Main(touch) {
 			checkStar(); //检查是否有收藏
 			//插入开始操作按钮
 			btnStartInsertPlace.appendChild(btnStartBox);
-			console.log("PUBD：网页发生变动，已重新呈现开始按钮。 %o", btnStartBox);
+			console.log("PUBD：已插入开始按钮。 %o", btnStartBox);
 			return true;
 		}
 	}
@@ -4070,16 +4076,57 @@ function Main(touch) {
 	手机版网页的root
 	#spa-contents 会被删掉重新添加，所以只能用更上一层
 	*/
-	const vueRoot = document.querySelector("#root"); //vue框架的root div
+	const rootNode = document.querySelector("#__next"); //vue框架的root div
 	const wrapper = document.querySelector("#wrapper"); //仍然少量存在的老板页面
 	const touchRoot = wrapper ? wrapper.querySelector("#contents") : null;
-	if (window.MutationObserver && (vueRoot || touch)) //如果支持MutationObserver，且是vue框架
+	if (globalThis.MutationObserver && (rootNode || touch)) //如果支持MutationObserver，且是vue框架
 	{
 		let reInsertStart = true; //是否需要重新插入开始按钮
 		let changeIllustUser = new MutationObserver(function(mutationsList, observer) {
 			if (mdev) console.log("作者链接 href 改变了",mutationsList);
 			checkStar();
 		});
+
+		reInsertStartFunc = ()=>{
+			for (const node of (touch ? touchRoot : subRoot).children) {
+				if (recommendList = node.querySelector(searchListCssPath)) {//如果是搜索结果界面而非用户/作品界面
+					mainDiv = node; //重新选择主div
+					if (mdev) console.debug("mainDiv 为 %o，搜索列表为 %o，", mainDiv, recommendList);
+					reInsertStart = false;
+					break;
+				} else {
+					const foundStartBtn = mainDivSearchCssSelector.some(entry => {
+						let btnStartInsertPlace,
+							cssS = entry.selectors,
+							fallcack = entry.fallcack;
+						try {
+							btnStartInsertPlace = node.querySelector(cssS);
+						} catch (e) {
+							if (mdev) console.error(`${cssS} 获取开始按钮容器异常`, e);
+							if (typeof fallcack === 'function') {
+								if (mdev) console.debug('尝试使用配置的 fallcack 重新获取');
+								btnStartInsertPlace = fallcack(node);
+							} else {
+								if (mdev) console.debug('未配置 fallcack 无法获取');
+							}
+						}
+						if(btnStartInsertPlace) {
+							mainDiv = node; //重新选择主div
+							if (mdev) console.debug("mainDiv 为 %o ，始按钮插入点条目为 %o",mainDiv,entry);
+							reInsertStart = !insertStartBtn(btnStartInsertPlace); //插入开始按钮
+
+							const userHeadLink = mainDiv.querySelector(artWorkUserHeadCssPath);
+							if (userHeadLink) //如果是作品页面
+							{
+								changeIllustUser.observe(userHeadLink, {attributeFilter:["href"]});
+							}
+							return true;
+						}else return false;
+					})
+					if (foundStartBtn) break; //如果插入了开始按钮，就退出循环
+				}
+			}
+		}
 		let observerLoop = new MutationObserver(function(mutationsList, observer) {
 			const removedNodes = mutationsList.flatMap(mutation=>[...mutation.removedNodes]);
 			//const addNodes = mutationsList.flatMap(mutation=>[...mutation.addNodes]);
@@ -4090,9 +4137,9 @@ function Main(touch) {
 			}
 
 			//如果被删除的节点里有我们的开始按钮，就重新插入；或者搜索列表被删除
-			if (removedNodes.some(node=>node.contains(btnStartBox)))
+			if (!document.body.contains(btnStartBox) || removedNodes.some(node=>node.contains(btnStartBox)))
 			{
-				console.log('已经添加的开始按钮因为页面改动被删除了');
+				console.log('PUBD：找不到开始按钮');
 				mainDiv = null;
 				reInsertStart = true;
 			}
@@ -4100,44 +4147,7 @@ function Main(touch) {
 			//搜索新的主div并插入开始按钮
 			if (reInsertStart)
 			{
-				for (const node of (touch ? touchRoot : subRoot).children) {
-					if (recommendList = node.querySelector(searchListCssPath)) {//如果是搜索结果界面而非用户/作品界面
-						mainDiv = node; //重新选择主div
-						if (mdev) console.debug("mainDiv 为 %o，搜索列表为 %o，", mainDiv, recommendList);
-						reInsertStart = false;
-						break;
-					} else {
-						const foundStartBtn = mainDivSearchCssSelector.some(entry => {
-							let btnStartInsertPlace,
-								cssS = entry.selectors,
-								fallcack = entry.fallcack;
-							try {
-								btnStartInsertPlace = node.querySelector(cssS);
-							} catch (e) {
-								if (mdev) console.error(`${cssS} 获取开始按钮容器异常`, e);
-								if (typeof fallcack === 'function') {
-									if (mdev) console.debug('尝试使用配置的 fallcack 重新获取');
-									btnStartInsertPlace = fallcack(node);
-								} else {
-									if (mdev) console.debug('未配置 fallcack 无法获取');
-								}
-							}
-							if(btnStartInsertPlace) {
-								mainDiv = node; //重新选择主div
-								if (mdev) console.debug("mainDiv 为 %o ，始按钮插入点条目为 %o",mainDiv,entry);
-								reInsertStart = !insertStartBtn(btnStartInsertPlace); //插入开始按钮
-	
-								const userHeadLink = mainDiv.querySelector(artWorkUserHeadCssPath);
-								if (userHeadLink) //如果是作品页面
-								{
-									changeIllustUser.observe(userHeadLink, {attributeFilter:["href"]});
-								}
-								return true;
-							}else return false;
-						})
-						if (foundStartBtn) break; //如果插入了开始按钮，就退出循环
-					}
-				}
+				reInsertStartFunc();
 			}
 
 			//作品页面显示推荐的部分
@@ -4166,7 +4176,9 @@ function Main(touch) {
 		//只执行一次的，插找P站新的根节点的位置
 		let observerFindSubRoot = new MutationObserver(function(mutationsList, observer) {
 			for (const mutation of mutationsList) {
+				if (mdev) console.debug("const mutation of mutationsList %o", mutation);
 				for (const node of mutation.addedNodes) {
+					if (mdev) console.debug("node of mutation.addedNodes %o", node);
 					if(!node.id){ //如果 root 下新增没有 id 的 node，就开始处理
 						//一直循环到下面有多个 node 时，当作子root，否则继续往下。
 						subRoot = node;
@@ -4174,19 +4186,24 @@ function Main(touch) {
 							subRoot = subRoot.childNodes[0];
 						}
 						if (mdev) console.log("subRoot 为 %o", subRoot);
-						observer.disconnect();
-						observerLoop.observe(subRoot, {childList:true, subtree:true});
+						//observer.disconnect();
+						observerLoop.observe(document.body, {childList:true, subtree:true});
 						return;
 					}else continue;
 				}
 			}
 		});
-		if (vueRoot) {
-			observerFindSubRoot.observe(vueRoot, {childList:true, subtree:false});
+		if (rootNode) {
+			observerFindSubRoot.observe(rootNode, {childList:true, subtree:false});
+			//2025-07-25，不知道怎么回事P站的源代码突然在服务端全部渲染好了
+			if (rootNode.hasChildNodes()) {
+				subRoot = rootNode.firstElementChild.lastElementChild;
+				reInsertStartFunc();
+			}
 		} else {
 			observerLoop.observe(touchRoot, {childList:true, subtree:true});
 		}
-	}else if(vueRoot == undefined)
+	}else if(rootNode == undefined)
 	{
 		if (wrapper) //仍然少量存在的老板页面
 		{
